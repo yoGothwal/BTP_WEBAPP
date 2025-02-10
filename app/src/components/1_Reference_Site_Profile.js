@@ -47,8 +47,7 @@ class Reference_Site extends Component {
 
             <Tabs id="CSMIP_Tabs" activeKey="Reference_Site" transition={false}>
                 <Tab eventKey="Reference_Site" title="Reference site" >
-                    <p></p>
-
+                    <p>Tab</p>
                     <Form onSubmit={this.saveAndContinue} validated>
                         <Row>
                             <Col xs={8}>

@@ -6,7 +6,7 @@ import { CloudUpload, CloudDownload } from "@mui/icons-material";
 import { Tooltip, IconButton } from "@mui/material";
 
 import { withStyles } from "@mui/styles";
-const ReferenceSite = ({
+const TargetSite = ({
   inputValues,
   nextStep,
   updateSoilLayers,
@@ -166,6 +166,18 @@ const ReferenceSite = ({
                 >
                   Add Row
                 </Button>
+                <IconButton>
+                  Target DEPTH (m){" "}
+                  <input
+                    type="text"
+                    name="Target_Depth"
+                    size="1"
+                    height="20px"
+                    defaultValue={inputValues.Target_Depth}
+                    required
+                    onChange={handleChange}
+                  />
+                </IconButton>
                 <IconButton component="label">
                   <CloudUpload />
                   <input
@@ -369,4 +381,4 @@ const ReferenceSite = ({
   );
 };
 
-export default ReferenceSite;
+export default TargetSite;

@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import Tab_1 from "./ReferenceSite";
-import Tab_2 from "./2_Target_Site_Profile";
+import Tab_2 from "./TargetSite";
 import Tab_3 from "./3_Ground_Motion";
 import Tab_4 from "./4_Analysis_Parameters";
 import Tab_5 from "./5_Results";

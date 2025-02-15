@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import Tab_1 from "./ReferenceSite";
-import Tab_2 from "./TargetSite";
+import Tab_2 from "./2_Target_Site_Profile";
 import Tab_3 from "./3_Ground_Motion";
 import Tab_4 from "./4_Analysis_Parameters";
 import Tab_5 from "./5_Results";
@@ -317,10 +317,18 @@ class Application extends Component {
                     ],
                 },
             ],
+            Motion: [{ data: [] }, { data: [] }]
         };
 
-        const Motion_Data = this.state.Motion;
+
+
+        // Bind the submission to handleChange()
+        this.handleChange = this.handleChange.bind(this);
+    }
+    componentDidMount() {
+        const Motion_Data = [...this.state.Motion];
         Motion_Data[1].data = Sample_Motion.data;
+
         this.setState({
             Motion: Motion_Data,
         });
@@ -328,16 +336,15 @@ class Application extends Component {
         this.update_Reference_Site_Profile_Plots();
         this.update_Target_Site_Profile_Plots();
         this.update_Target_Depth_Plots(this.state.Target_Depth);
-
-        // Bind the submission to handleChange()
-        this.handleChange = this.handleChange.bind(this);
     }
 
     // function to update the step by 1
     nextStep = () => {
         const { step } = this.state;
 
-        if (step === 1) this.Generate_FAS();
+        if (step === 2) {
+            this.Generate_FAS();
+        }
 
         this.setState({
             step: step + 1,
@@ -373,13 +380,12 @@ class Application extends Component {
         })
             .then((response) => response.json())
             .then((json) => {
-                // console.log(json);
                 this.setState({
                     whether_analyzed: json.whether_analyzed,
                     Transfer_Functions: json.Transfer_Functions,
                     Max_Strain_Profile: json.Max_Strain_Profile,
                 });
-                console.log(this.state);
+
 
                 if (this.state.whether_analyzed === 2) {
                     this.Generate_Motion();
@@ -388,6 +394,7 @@ class Application extends Component {
                         whether_analyzed: 0,
                     });
                 }
+                console.log("state after analyzing : ", this.state)
             })
             .catch((error) => console.log(error));
     };
@@ -398,10 +405,11 @@ class Application extends Component {
     /////////////////////////////////////////////
     Generate_FAS = () => {
         const { step } = this.state;
-        console.log(this.state);
+
 
         this.setState({ whether_analyzed: 1 });
-
+        console.log("generate fas called");
+        console.log("state after generating feas: ", this.state)
         fetch("/Generate_FAS", {
             method: "POST",
             mode: "cors",
@@ -413,18 +421,18 @@ class Application extends Component {
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
                 this.setState({
                     whether_analyzed: json.whether_analyzed,
                     FAS: json.FAS,
                 });
-                console.log(this.state);
 
                 if (this.state.whether_analyzed === 2) {
                     this.setState({
                         whether_analyzed: 0,
                     });
                 }
+
+
             })
             .catch((error) => console.log(error));
     };
@@ -1193,6 +1201,7 @@ class Application extends Component {
         switch (step) {
             case 1:
                 return (
+
                     <Tab_1
                         nextStep={this.nextStep}
                         updateSoilLayers={this.update_Reference_Site_Soil_Profile}

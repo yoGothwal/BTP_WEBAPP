@@ -7,7 +7,7 @@ import { Tooltip, IconButton } from "@mui/material";
 
 import { withStyles } from "@mui/styles";
 const ReferenceSite = ({
-  inputValues,
+  inputValues={},
   nextStep,
   updateSoilLayers,
   readSoilProfileData,
@@ -57,7 +57,7 @@ const ReferenceSite = ({
     const newRow = {
       Name: `${newId}`,
       Thickness: 5,
-      Vs: 300,
+      Vs: 100,
       Gamma: 20,
       PI: 0,
       OCR: 1,
@@ -144,7 +144,7 @@ const ReferenceSite = ({
   return (
     <Tabs id="CSMIP_Tabs" activeKey="Reference_Site" transition={false}>
       <Tab eventKey="Reference_Site" title="Reference site">
-        <Form onSubmit={nextStep}>
+        <Form onSubmit={()=>nextStep()}>
           <Row>
             <Col xs={8}>
               <Row>

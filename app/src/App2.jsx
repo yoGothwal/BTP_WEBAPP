@@ -28,13 +28,13 @@ const App = () => {
       <h2> GENERATE INPUT GROUND MOTIONS FOR NUMERICAL ANALYSES </h2>
       A web application for the development of input ground motions for the
       numerical evaluation of structures in engineering practice <hr />
-
-      <Routes>
-        <Route path="/" element={<Home></Home>}></Route>
-        <Route path="/about" element={<About></About>}></Route>
-        <Route path="/analyze" element={<Application></Application>}></Route>
-      </Routes>
-
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home></Home>}></Route>
+          <Route path="/about" element={<About></About>}></Route>
+          <Route path="/analyze" element={<Application></Application>}></Route>
+        </Routes>
+      </Router>
       <SideNav></SideNav>
       <div style={{ margin: 20 }}>
         <br></br>

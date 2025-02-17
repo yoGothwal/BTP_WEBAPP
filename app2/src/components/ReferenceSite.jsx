@@ -19,7 +19,6 @@ import {
   TextField,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { withStyles } from "@mui/styles";
 const ReferenceSite = ({
   inputValues = {},
   nextStep,
@@ -36,7 +35,6 @@ const ReferenceSite = ({
       backgroundColor: "green",
     },
   };
-  const CustomTooltip = withStyles(styles)(Tooltip);
 
   useEffect(() => {
     setSoilProfile(inputValues.Reference_Site_Soil_Profile || []);
@@ -181,10 +179,19 @@ const ReferenceSite = ({
         </Tabs>
       </Box>
       {activeTab === "Reference_Site" && (
-        <Box component="form" onSubmit={nextStep} sx={{ mt: 2 }}>
-          <Grid container>
-            <Grid item md={8}>
-              <Card elevation={4}>
+        <Box
+          component="form"
+          onSubmit={nextStep}
+          sx={{ mt: 2, display: "flex" }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} lg={8}>
+              <Card
+                elevation={4}
+                sx={{
+                  width: "auto",
+                }}
+              >
                 <CardContent>
                   <DataGrid
                     getRowId={(row) => row.Name}
@@ -193,7 +200,7 @@ const ReferenceSite = ({
                     pageSize={5}
                     processRowUpdate={handleRowUpdate}
                     disableSelectionOnClick
-                    sx={{ height: 400, width: "100%" }}
+                    sx={{ height: "30vh", width: "100%" }}
                   />
                 </CardContent>
               </Card>
@@ -204,12 +211,18 @@ const ReferenceSite = ({
                     sx={{
                       justifyContent: "space-between",
                       alignItems: "center",
+                      mt: 1,
                     }}
                   >
+                    {/* <Button  variant="primary" onClick={handleRowAdd}>
+                      Add Row
+                    </Button> */}
                     <Button
+                      sx={{
+                        mt: 0,
+                      }}
                       onClick={handleRowAdd}
-                      variant="success"
-                      className="mt-2"
+                      variant="contained"
                     >
                       Add Row
                     </Button>
@@ -247,7 +260,7 @@ const ReferenceSite = ({
                     <Item>
                       <Grid container spacing={2}>
                         <Grid item>
-                          <Typography>
+                          <Typography component="span">
                             <b>2) Water table depth</b> (m)
                           </Typography>
                         </Grid>
@@ -273,7 +286,7 @@ const ReferenceSite = ({
                         }}
                       >
                         <Grid item>
-                          <Typography>
+                          <Typography component="span">
                             <b> 3) Halfspace</b>&nbsp;(V<sub>S</sub>(m/s)):
                           </Typography>
                         </Grid>
@@ -289,12 +302,11 @@ const ReferenceSite = ({
                         </Grid>
                         <Grid item xs={2}>
                           <Typography>
-                            <CustomTooltip
-                              title="Halfspace damping"
-                              placement="bottom"
-                            >
-                              <b>Damping (%)</b>
-                            </CustomTooltip>
+                            <Tooltip title="Halfspace damping">
+                              <Typography component="span">
+                                <b>Damping (%)</b>
+                              </Typography>
+                            </Tooltip>
                           </Typography>
                         </Grid>
                         <Grid item xs={2}>
@@ -315,7 +327,7 @@ const ReferenceSite = ({
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item md={4}>
+            <Grid item xs={12} lg={4}>
               <Card elevation={4}>
                 <CardContent>
                   <Tabs
@@ -326,11 +338,11 @@ const ReferenceSite = ({
                     <Tab value="Damping_Profile" label="Damping"></Tab>
                   </Tabs>
                   {nestedTab === "Vs_Profile" && (
-                    <Box>
+                    <Box sx={{ height: "58vh" }}>
                       <ResponsiveLine
                         data={inputValues.Site_Vs_Profile}
                         margin={{ top: 50, right: 0, bottom: 10, left: 70 }}
-                        xScale={{ type: "linear" }}
+                        xScale={{ type: "linear", min: "auto", max: "auto" }}
                         yScale={{ type: "linear", reverse: true }}
                         axisTop={{
                           legend: "Shear wave velocity, Vs (m/s)",
@@ -343,7 +355,7 @@ const ReferenceSite = ({
                     </Box>
                   )}
                   {nestedTab === "Damping_Profile" && (
-                    <Box>
+                    <Box sx={{ height: "40vh", minHeight: "550px" }}>
                       <ResponsiveLine
                         data={inputValues.Site_Damping_Profile}
                         margin={{ top: 50, right: 0, bottom: 10, left: 70 }}
@@ -372,33 +384,33 @@ const ReferenceSite = ({
                         }}
                         colors={{ datum: "color" }}
                         enablePoints={false}
-                        useMesh={true}
-                        legends={[
-                          {
-                            anchor: "bottom-left",
-                            direction: "column",
-                            justify: false,
-                            translateX: 10,
-                            translateY: -10,
-                            itemsSpacing: 0,
-                            itemDirection: "left-to-right",
-                            itemWidth: 80,
-                            itemHeight: 20,
-                            itemOpacity: 0.75,
-                            symbolSize: 12,
-                            symbolShape: "circle",
-                            symbolBorderColor: "rgba(0, 0, 0, .5)",
-                            effects: [
-                              {
-                                on: "hover",
-                                style: {
-                                  itemBackground: "rgba(0, 0, 0, .03)",
-                                  itemOpacity: 1,
-                                },
-                              },
-                            ],
-                          },
-                        ]}
+                        // useMesh={true}
+                        // legends={[
+                        //   {
+                        //     anchor: "bottom-left",
+                        //     direction: "column",
+                        //     justify: false,
+                        //     translateX: 10,
+                        //     translateY: -10,
+                        //     itemsSpacing: 0,
+                        //     itemDirection: "left-to-right",
+                        //     itemWidth: 80,
+                        //     itemHeight: 20,
+                        //     itemOpacity: 0.75,
+                        //     symbolSize: 12,
+                        //     symbolShape: "circle",
+                        //     symbolBorderColor: "rgba(0, 0, 0, .5)",
+                        //     effects: [
+                        //       {
+                        //         on: "hover",
+                        //         style: {
+                        //           itemBackground: "rgba(0, 0, 0, .03)",
+                        //           itemOpacity: 1,
+                        //         },
+                        //       },
+                        //     ],
+                        //   },
+                        // ]}
                       />
                     </Box>
                   )}

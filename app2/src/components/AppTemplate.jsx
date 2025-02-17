@@ -1,8 +1,8 @@
 import React from "react";
-import SideNav from "./SideNav";
 import NavBar from "./NavBar";
+import SideNav from "./SideNav";
 import { Box, Grid, Typography } from "@mui/material";
-const Home = () => {
+const AppTemplate = ({ content }) => {
   return (
     <>
       <NavBar></NavBar>
@@ -32,7 +32,7 @@ const Home = () => {
             </Box>
           </Grid>
           <Grid item>
-            <Box sx={{ p: 2 }}></Box>
+            <Box sx={{ p: 2 }}>{content}</Box>
           </Grid>
         </Grid>
       </Box>
@@ -40,4 +40,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AppTemplate;

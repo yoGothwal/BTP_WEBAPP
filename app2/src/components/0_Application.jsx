@@ -20,6 +20,8 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { Typography } from "@mui/material";
+import AppTemplate from "./AppTemplate";
 
 class Application extends Component {
   constructor(props) {
@@ -1218,30 +1220,18 @@ class Application extends Component {
       case 1:
         return (
           <>
-            <NavBar></NavBar>
-            <br></br>
-            <br></br>
-            <Box sx={{ display: "flex" }}>
-              <SideNav></SideNav>
-              <div>
-                <Box sx={{ flexGrow: 1, p: 3, mt: 1 }}>
-                  <h2>GENERATE INPUT GROUND MOTIONS FOR NUMERICAL ANALYSES </h2>
-                  A web application for the development of input ground motions
-                  for the numerical evaluation of structures in engineering
-                  practice
-                </Box>
-                <Box sx={{ flexGrow: 1, p: 0, mt: 0 }}>
-                  <Tab_1
-                    nextStep={this.nextStep}
-                    updateSoilLayers={this.update_Reference_Site_Soil_Profile}
-                    readSoilProfileData={this.readExcelProfileData}
-                    downloadSoilProfileData={this.writeExcelProfileData}
-                    handleChange={this.handleChange}
-                    inputValues={inputValues}
-                  />
-                </Box>
-              </div>
-            </Box>
+            <AppTemplate
+              content={
+                <Tab_1
+                  nextStep={this.nextStep}
+                  updateSoilLayers={this.update_Reference_Site_Soil_Profile}
+                  readSoilProfileData={this.readExcelProfileData}
+                  downloadSoilProfileData={this.writeExcelProfileData}
+                  handleChange={this.handleChange}
+                  inputValues={inputValues}
+                />
+              }
+            ></AppTemplate>
           </>
         );
       case 2:

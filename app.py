@@ -1,6 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
+from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from user_management import user_blueprint, bcrypt, db
 import subprocess
 import os
 import simplejson as json
@@ -14,10 +17,34 @@ from scipy.fft import fft, fftfreq, rfft, rfftfreq, ifft, irfft
 # import matplotlib.pyplot as plt
 import pyrotd
 import pykooh
+from functools import wraps
 
 app = Flask(__name__, static_folder='app/build', static_url_path="")
 # app = Flask(__name__)
 CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SECRET_KEY'] = 'your_secret_key'  # Required for session management
+
+# Initialize extensions
+db.init_app(app)
+bcrypt.init_app(app)
+
+# Register the user management blueprint
+app.register_blueprint(user_blueprint, url_prefix='/user')
+
+
+# Create the database
+with app.app_context():
+    db.create_all()
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:  # Check if user is logged in
+            return jsonify({"message": "Unauthorized, please log in"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # @app.route('/time')
 # def get_current_time():
@@ -81,6 +108,7 @@ def gen_Vs_step(thick, Vs):
 # Generate FAS from Source_RVT_Theory_Motion
 ###########################################################
 @app.route('/Generate_FAS', methods=['POST'])
+@login_required
 def Generate_FAS():
 
     Magnitude= float(request.json["Magnitude"]);
@@ -111,12 +139,12 @@ def Generate_FAS():
 # Analyze the problem
 ###########################################################
 @app.route('/Analyze', methods=['POST'])
+@login_required
 def Analyze():
-    print("hellooo")
 
     Target_Depth                = request.json["Target_Depth"];
     Reference_Site_Soil_Profile = request.json["Reference_Site_Soil_Profile"];
-    Target_Site_Soil_Profile    = request.json["Target_Site_Soil_Profile"];
+    Tar_Site_Soil_Profile    = request.json["Target_Site_Soil_Profile"];
     FAS_Data                    = request.json["FAS"][0]["data"];
     Transfer_Functions          = request.json["Transfer_Functions"];
     Max_Strain_Profile          = request.json["Max_Strain_Profile"];
@@ -378,10 +406,13 @@ def Analyze():
 
     Max_Strain_Profile[1]["data"] = Target_Site_Max_Shear_Strain_Data_Array;
 
-    return jsonify({'whether_analyzed': 2, 'Transfer_Functions': Transfer_Functions, 'Max_Strain_Profile': Max_Strain_Profile}), 200###########################################################
+    return jsonify({'whether_analyzed': 2, 'Transfer_Functions': Transfer_Functions, 'Max_Strain_Profile': Max_Strain_Profile}), 200
+
+###########################################################
 # Analyze the problem
 ###########################################################
 @app.route('/Generate_Motion', methods=['POST'])
+@login_required
 def Generate_Motion():
 
     # some constants
@@ -501,6 +532,7 @@ def Generate_Motion():
 # Show the build webpage
 ###########################################################
 @app.route('/api',methods=["GET"])
+@login_required
 @cross_origin()
 def index():
     return {
@@ -511,9 +543,11 @@ def index():
 # Index html serve
 ###########################################################
 @app.route('/')
+@login_required
 def serve():
     return send_from_directory(app.static_folder,"index.html")
 
+print(app.url_map)
 if __name__ == '__main__':
     # app.jinja_env.auto_reload = True
     # app.config['TEMPLATES_AUTO_RELOAD'] = True

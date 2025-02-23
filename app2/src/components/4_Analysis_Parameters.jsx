@@ -263,15 +263,14 @@ const Analysis_Settings = ({
               type="submit"
               disabled={whether_analyzed === 2}
             >
-              Analyze
-              {/* {whether_analyzed === 2 ? (
+              {whether_analyzed === 2 ? (
                 "Analyze"
               ) : (
                 <>
                   <CircularProgress size={20} sx={{ mr: 1 }} />
                   Analyze
                 </>
-              )} */}
+              )}
             </Button>
           </Box>
         </Box>

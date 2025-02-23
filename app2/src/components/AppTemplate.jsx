@@ -11,8 +11,8 @@ const AppTemplate = ({ content }) => {
       <Box sx={{ display: "flex" }}>
         <SideNav></SideNav>
         <Grid container>
-          <Grid item>
-            <Box sx={{ p: 3, mt: 2 }}>
+          <Grid item xs={12}>
+            <Box sx={{ p: 3, mt: 1 }}>
               <Typography variant="h3" fontWeight="bold">
                 GENERATE INPUT GROUND MOTIONS FOR NUMERICAL ANALYSES
               </Typography>
@@ -31,8 +31,8 @@ const AppTemplate = ({ content }) => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item>
-            <Box sx={{ p: 2 }}>{content}</Box>
+          <Grid item xs={12}>
+            <Box sx={{ p: 1, alignItems: "center" }}>{content}</Box>
           </Grid>
         </Grid>
       </Box>

@@ -133,16 +133,6 @@ class Reference_Site extends Component {
       },
     ];
 
-    // const Soil_Profile_Table = [{ title: "Layer", field: "Name", type: "string", align: "center", editable: 'never' },
-    // { title: "H (m)", field: "Thickness", type: "numeric", align: "center", initialEditValue: 5, validate: rowData => rowData.Thickness > 0 },
-    // { title: <h7>V<sub>S </sub>(m/s)</h7>, field: "Vs", type: "numeric", align: "center", initialEditValue: 100, validate: rowData => rowData.Vs > 0 },
-    // { title: <h7>γ<sub>sat </sub>(kN/m<sup>3</sup>)</h7>, field: "Gamma", type: "numeric", align: "center", initialEditValue: 20, validate: rowData => rowData.Gamma > 0 },
-    // { title: "PI", field: "PI", type: "numeric", align: "center", initialEditValue: 0, validate: rowData => rowData.PI >= 0 },
-    // { title: "OCR", field: "OCR", type: "numeric", align: "center", initialEditValue: 1, validate: rowData => rowData.OCR >= 1 },
-    // { title: "Damping (%)", field: "Damping", type: "numeric", align: "center", initialEditValue: 0.02, validate: rowData => (rowData.Damping <= 1 && rowData.Damping >= 0) },
-    // { title: "Soil model", field: "SoilModel", lookup: { 1: 'Elastic', 2: 'Darendeli' }, align: "center", initialEditValue: 1, validate: rowData => rowData.SoilModel > 0 }
-    // ];
-
     const styles = {
       tooltip: {
         // width: "92px",

@@ -1,41 +1,84 @@
 import React from "react";
-import SideNav from "./SideNav";
-import NavBar from "./NavBar";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import AppTemplate from "./AppTemplate";
+const Test = () => {
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          backgroundColor: "black",
+          flexDirection: "row",
+          flexWrap: "wrap",
+
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "flex-end",
+        }}
+      >
+        <Box
+          padding={4}
+          margin={2}
+          sx={{ backgroundColor: "green", height: "60px" }}
+        >
+          1
+        </Box>
+        <Box
+          padding={4}
+          margin={2}
+          sx={{ backgroundColor: "green", height: "80px" }}
+        >
+          2
+        </Box>
+        <Box
+          padding={4}
+          margin={2}
+          sx={{ backgroundColor: "green", height: "100px" }}
+        >
+          3
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          4
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          5
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          6
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          7
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          8
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          9
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          10
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          11
+        </Box>
+        <Box padding={4} margin={2} sx={{ backgroundColor: "green" }}>
+          12
+        </Box>
+        <Box
+          padding={4}
+          margin={2}
+          sx={{ backgroundColor: "green", height: "80px" }}
+        >
+          13
+        </Box>
+      </Box>
+    </>
+  );
+};
 const Home = () => {
   return (
     <>
-      <NavBar></NavBar>
-      <br></br>
-      <br></br>
-      <Box sx={{ display: "flex" }}>
-        <SideNav></SideNav>
-        <Grid container>
-          <Grid item>
-            <Box sx={{ p: 3, mt: 2 }}>
-              <Typography variant="h3" fontWeight="bold">
-                GENERATE INPUT GROUND MOTIONS FOR NUMERICAL ANALYSES
-              </Typography>
-
-              <Typography
-                variant="body1"
-                sx={{
-                  borderBottom: 2,
-                  padding: 2,
-                  borderColor: "black",
-                }}
-              >
-                A web application for the development of input ground motions
-                for the numerical evaluation of structures in engineering
-                practice
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item>
-            <Box sx={{ p: 2 }}></Box>
-          </Grid>
-        </Grid>
-      </Box>
+      <AppTemplate content={<Test></Test>}></AppTemplate>
     </>
   );
 };

@@ -1,43 +1,13 @@
 import React, { Component } from 'react';
 import { Form, Button, Col, Row, Tabs, Tab } from 'react-bootstrap';
-// import MaterialTable from "material-table";
-import { DataGrid } from '@mui/x-data-grid';  //using it instead of material-table
-import { ResponsiveLine } from '@nivo/line';
-import { CloudUpload, CloudDownload } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import IconButton from '@mui/material/IconButton';
+import { CloudUpload, CloudDownload } from "@material-ui/icons";
+import MaterialTable from "material-table";
+import { ResponsiveLine } from '@nivo/line'
+import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from "@material-ui/core/styles";
 
 class Target_Site extends Component {
-    state = {
-        soilProfile: []
-    };
 
-    componentDidMount() {
-        this.setState({ soilProfile: this.props.inputValues.Reference_Site_Soil_Profile });
-    }
-    //Table
-    processRowUpdate = (newRow, oldRow) => {
-        const updatedData = this.state.soilProfile.map(row =>
-            row.id === oldRow.id ? { ...newRow } : row
-        );
-        this.setState({ soilProfile: updatedData });
-        this.props.updateSoilLayers(updatedData);
-        return newRow;
-    };
-
-    handleRowDelete = (id) => {
-        const updatedData = this.state.soilProfile.filter(row => row.id !== id);
-        this.setState({ soilProfile: updatedData });
-        this.props.updateSoilLayers(updatedData);
-    };
-
-    handleRowAdd = () => {
-        const newId = this.state.soilProfile.length + 1;
-        const newRow = { id: newId, Name: newId, Thickness: 5, Vs: 100, Gamma: 20, PI: 0, OCR: 1, Damping: 0.02, SoilModel: 1 };
-        this.setState({ soilProfile: [...this.state.soilProfile, newRow] });
-        this.props.updateSoilLayers([...this.state.soilProfile, newRow]);
-    };
     back = (e) => {
         e.preventDefault();
         this.props.prevStep();
@@ -49,33 +19,16 @@ class Target_Site extends Component {
     };
 
     render() {
-        const columns = [
-            { field: "Name", headerName: "Layer", width: 100, editable: false },
-            { field: "Thickness", headerName: "H (m)", width: 120, type: "number", editable: true },
-            { field: "Vs", headerName: "Vs (m/s)", width: 150, type: "number", editable: true },
-            { field: "Gamma", headerName: "γsat (kN/m³)", width: 150, type: "number", editable: true },
-            { field: "PI", headerName: "PI", width: 100, type: "number", editable: true },
-            { field: "OCR", headerName: "OCR", width: 100, type: "number", editable: true },
-            { field: "Damping", headerName: "Damping (%)", width: 150, type: "number", editable: true },
-            { field: "SoilModel", headerName: "Soil Model", width: 150, type: "number", editable: true },
-            {
-                field: "actions",
-                headerName: "Actions",
-                width: 100,
-                renderCell: (params) => (
-                    <Button variant="danger" size="sm" onClick={() => this.handleRowDelete(params.row.id)}>Delete</Button>
-                ),
-            }
+
+        const Soil_Profile_Table = [{ title: "Layer", field: "Name", type: "string", align: "center", editable: 'never' },
+        { title: "H (m)", field: "Thickness", type: "numeric", align: "center", initialEditValue: 5, validate: rowData => rowData.Thickness > 0 },
+        { title: <h7>V<sub>S </sub>(m/s)</h7>, field: "Vs", type: "numeric", align: "center", initialEditValue: 100, validate: rowData => rowData.Vs > 0 },
+        { title: <h7>γ<sub>sat </sub>(kN/m<sup>3</sup>)</h7>, field: "Gamma", type: "numeric", align: "center", initialEditValue: 20, validate: rowData => rowData.Gamma > 0 },
+        { title: "PI", field: "PI", type: "numeric", align: "center", initialEditValue: 0, validate: rowData => rowData.PI >= 0 },
+        { title: "OCR", field: "OCR", type: "numeric", align: "center", initialEditValue: 1, validate: rowData => rowData.OCR >= 1 },
+        { title: "Damping (%)", field: "Damping", type: "numeric", align: "center", initialEditValue: 0.02, validate: rowData => (rowData.Damping <= 1 && rowData.Damping >= 0) },
+        { title: "Soil model", field: "SoilModel", lookup: { 1: 'Elastic', 2: 'Darendeli' }, align: "center", initialEditValue: 1, validate: rowData => rowData.SoilModel > 0 }
         ];
-        // const Soil_Profile_Table = [{ title: "Layer", field: "Name", type: "string", align: "center", editable: 'never' },
-        // { title: "H (m)", field: "Thickness", type: "numeric", align: "center", initialEditValue: 5, validate: rowData => rowData.Thickness > 0 },
-        // { title: <h7>V<sub>S </sub>(m/s)</h7>, field: "Vs", type: "numeric", align: "center", initialEditValue: 100, validate: rowData => rowData.Vs > 0 },
-        // { title: <h7>γ<sub>sat </sub>(kN/m<sup>3</sup>)</h7>, field: "Gamma", type: "numeric", align: "center", initialEditValue: 20, validate: rowData => rowData.Gamma > 0 },
-        // { title: "PI", field: "PI", type: "numeric", align: "center", initialEditValue: 0, validate: rowData => rowData.PI >= 0 },
-        // { title: "OCR", field: "OCR", type: "numeric", align: "center", initialEditValue: 1, validate: rowData => rowData.OCR >= 1 },
-        // { title: "Damping (%)", field: "Damping", type: "numeric", align: "center", initialEditValue: 0.02, validate: rowData => (rowData.Damping <= 1 && rowData.Damping >= 0) },
-        // { title: "Soil model", field: "SoilModel", lookup: { 1: 'Elastic', 2: 'Darendeli' }, align: "center", initialEditValue: 1, validate: rowData => rowData.SoilModel > 0 }
-        // ];
 
         const styles = {
             tooltip: {
@@ -88,7 +41,9 @@ class Target_Site extends Component {
         };
 
         const CustomTooltip = withStyles(styles)(Tooltip);
+
         return (
+
             <Tabs id="CSMIP_Tabs" activeKey="Target_Site" transition={false}>
                 <Tab eventKey="Reference_Site" title="Reference site" disabled />
                 <Tab eventKey="Target_Site" title="Target site" >
@@ -96,29 +51,7 @@ class Target_Site extends Component {
                     <Form onSubmit={this.saveAndContinue} validated>
                         <Row> <Col xs={8}>
                             <Row>
-                                <p>Table</p>
-                                <div style={{ height: 400, width: '100%' }}>
-                                    <DataGrid
-                                        getRowId={(row) => row.Name}
-                                        rows={this.state.soilProfile}
-                                        columns={columns}
-                                        pageSize={5}
-                                        processRowUpdate={this.processRowUpdate}
-                                        disableSelectionOnClick
-                                    />
-                                </div>
-                                <Button onClick={this.handleRowAdd} variant="success" className="mt-2">Add Row</Button>
-                                <br />
-                                <br />
-                                <IconButton component="label">
-                                    <CloudUpload />
-                                    <input type="file" hidden accept=".xlsx" onChange={this.props.readSoilProfileData} />
-                                </IconButton>
-                                <IconButton onClick={this.props.downloadSoilProfileData}>
-                                    <CloudDownload />
-                                </IconButton>
-                                <div>
-                                    {/* <MaterialTable
+                                <MaterialTable
                                     title="1) Soil profile:"
                                     style={{ height: "80%" }}
                                     columns={Soil_Profile_Table}
@@ -231,8 +164,7 @@ class Target_Site extends Component {
                                             actions: "Edit"
                                         }
                                     }}
-                                /> */}
-                                </div>
+                                />
                             </Row>
                             <Row>
                                 <div>
@@ -250,6 +182,7 @@ class Target_Site extends Component {
                                     </Form.Group>
                                 </div>
                             </Row>
+
                         </Col>
                             <Col xs={4}>
                                 <Tabs id="Profiles" defaultActiveKey="Vs_Profile" transition={false} >
@@ -341,6 +274,9 @@ class Target_Site extends Component {
                                 </Tabs>
                             </Col>
                         </Row>
+
+
+
                         <p> </p>
                         <Button variant="secondary" onClick={this.back}>Back</Button> {' '}
                         <Button variant="primary" type="submit">Next</Button>

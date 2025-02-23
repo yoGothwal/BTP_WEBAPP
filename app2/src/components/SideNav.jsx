@@ -16,12 +16,13 @@ import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import InfoIcon from "@mui/icons-material/Info";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
+
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -89,6 +90,7 @@ export default function SideNav() {
   ];
   const navigate = useNavigate();
   const isDrawerOpen = useSelector((state) => state.drawer.isOpen);
+  const logoutItem = { name: "Logout", route: "/home", icon: <LogoutIcon /> };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -158,7 +160,52 @@ export default function SideNav() {
             </ListItem>
           ))}
         </List>
-        <Divider />
+        <List sx={{ marginTop: "auto", display: "flex" }}>
+          <ListItem
+            key={logoutItem.name}
+            disablePadding
+            sx={{ display: "block" }}
+            onClick={() => navigate(logoutItem.route)}
+          >
+            <ListItemButton
+              sx={[
+                {
+                  minHeight: 48,
+                  px: 2.5,
+                },
+                isDrawerOpen
+                  ? {
+                      justifyContent: "initial",
+                    }
+                  : {
+                      justifyContent: "center",
+                    },
+              ]}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  justifyContent: "center",
+                  mr: isDrawerOpen ? 3 : "auto",
+                }}
+              >
+                {logoutItem.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={logoutItem.name}
+                sx={[
+                  isDrawerOpen
+                    ? {
+                        opacity: 1,
+                      }
+                    : {
+                        opacity: 0,
+                      },
+                ]}
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Drawer>
     </Box>
   );

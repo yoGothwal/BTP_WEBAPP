@@ -1,210 +1,188 @@
-import React, { Component } from "react";
-import { Form, Button, Col, Row, Tabs, Tab, Spinner } from "react-bootstrap";
+import React, { useState } from "react";
+import {
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+  Tooltip,
+  TextField,
+  Typography,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
-import { Tooltip } from "@mui/material";
-import { withStyles } from "@mui/styles";
 
-class Analysis_Settings extends Component {
-  back = (e) => {
+const Analysis_Settings = ({
+  inputValues,
+  nextStep,
+  prevStep,
+  handleChange,
+  whether_analyzed,
+}) => {
+  const [activeTab, setActiveTab] = useState("Analysis_Parameters");
+  const [nestedTab, setNestedTab] = useState("Vs_Profile");
+
+  const saveAndContinue = (e) => {
     e.preventDefault();
-    this.props.prevStep();
+    nextStep();
   };
 
-  saveAndContinue = (e) => {
+  const back = (e) => {
     e.preventDefault();
-    this.props.nextStep();
+    prevStep();
   };
 
-  render() {
-    const whether_analyzed = this.props.inputValues.whether_analyzed;
-
-    const styles = {
-      tooltip: {
-        // width: "92px",
-        // height: "36px",
-        borderRadius: "18px",
-        boxShadow: "0 20px 80px 0",
-        backgroundColor: "green",
-      },
-    };
-
-    const CustomTooltip = withStyles(styles)(Tooltip);
-
-    var Analysis_Parameters = "";
-    if (this.props.inputValues.Analysis_Type === "EQL") {
-      Analysis_Parameters = (
-        <div>
-          <h6>2) Analysis parameters:</h6>
-          <Form.Group
-            as={Row}
-            controlId="Date"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Col sm={{ span: 8, offset: 0 }}>
-              <CustomTooltip
-                title="Error tolerance is the limit at which the iterative process will terminate. "
+  const renderAnalysisParameters = () => {
+    if (inputValues.Analysis_Type === "EQL") {
+      return (
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+            2) Analysis parameters:
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Tooltip
+                title="Error tolerance is the limit at which the iterative process will terminate."
                 placement="right"
               >
-                <Form.Label> &nbsp;&nbsp; Error tolerance (%) </Form.Label>
-              </CustomTooltip>
-            </Col>
-            <Col sm={{ span: 4, offset: 0 }}>
-              <Form.Control
-                type="text"
-                name="Tol"
-                defaultValue={this.props.inputValues.Tol}
-                required
-                onChange={this.props.handleChange}
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group
-            as={Row}
-            controlId="Date"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Col sm={{ span: 8, offset: 0 }}>
-              <CustomTooltip
+                <TextField
+                  fullWidth
+                  label="Error tolerance (%)"
+                  name="Tol"
+                  defaultValue={inputValues.Tol}
+                  required
+                  onChange={handleChange}
+                />
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12}>
+              <Tooltip
                 title="Maximum number of iterations to perform."
                 placement="right"
               >
-                <Form.Label> &nbsp;&nbsp; Maximum iterations </Form.Label>
-              </CustomTooltip>
-            </Col>
-            <Col sm={{ span: 4, offset: 0 }}>
-              <Form.Control
-                type="text"
-                name="MaxIter"
-                defaultValue={this.props.inputValues.MaxIter}
-                required
-                onChange={this.props.handleChange}
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group
-            as={Row}
-            controlId="Date"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Col sm={{ span: 8, offset: 0 }}>
-              <CustomTooltip
+                <TextField
+                  fullWidth
+                  label="Maximum iterations"
+                  name="MaxIter"
+                  defaultValue={inputValues.MaxIter}
+                  required
+                  onChange={handleChange}
+                />
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12}>
+              <Tooltip
                 title="Ratio between the maximum strain and effective strain used to compute strain-compatible properties."
                 placement="right"
               >
-                <Form.Label> &nbsp;&nbsp; Effective strain ratio</Form.Label>
-              </CustomTooltip>
-            </Col>
-            <Col sm={{ span: 4, offset: 0 }}>
-              <Form.Control
-                type="text"
-                name="EffStrain"
-                defaultValue={this.props.inputValues.EffStrain}
-                required
-                onChange={this.props.handleChange}
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group
-            as={Row}
-            controlId="Date"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Col sm={{ span: 8, offset: 0 }}>
-              <CustomTooltip
-                title="Limit of strain in calculations. If this strain is exceed, the iterative calculation is ended."
+                <TextField
+                  fullWidth
+                  label="Effective strain ratio"
+                  name="EffStrain"
+                  defaultValue={inputValues.EffStrain}
+                  required
+                  onChange={handleChange}
+                />
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12}>
+              <Tooltip
+                title="Limit of strain in calculations. If this strain is exceeded, the iterative calculation is ended."
                 placement="right"
               >
-                <Form.Label> &nbsp;&nbsp; Strain limit</Form.Label>
-              </CustomTooltip>
-            </Col>
-            <Col sm={{ span: 4, offset: 0 }}>
-              <Form.Control
-                type="text"
-                name="MaxFreq"
-                defaultValue={this.props.inputValues.StrainLimit}
-                required
-                onChange={this.props.handleChange}
-              />
-            </Col>
-          </Form.Group>
-        </div>
+                <TextField
+                  fullWidth
+                  label="Strain limit"
+                  name="StrainLimit"
+                  defaultValue={inputValues.StrainLimit}
+                  required
+                  onChange={handleChange}
+                />
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </CardContent>
       );
     }
+    return null;
+  };
 
-    return (
-      <Tabs id="CSMIP_Tabs" activeKey="Analysis_Parameters" transition={false}>
-        <Tab eventKey="Reference_Site" title="Reference site" disabled />
-        <Tab eventKey="Target_Site" title="Target site" disabled />
-        <Tab eventKey="Ground_Motion" title="Ground motion" disabled />
+  return (
+    <>
+      <Box sx={{ justifyContent: "center", alignItems: "center" }}>
+        <Tabs
+          value={activeTab}
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          sx={{
+            "& .MuiTab-root": {
+              color: "primary.main",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            },
+            "& .Mui-selected": { color: "primary.main" },
+            "& .MuiTabs-indicator": { backgroundColor: "primary.main" },
+          }}
+        >
+          <Tab label="Reference Site" value="Reference_Site" disabled />
+          <Tab label="Target Site" value="Target_Site" disabled />
+          <Tab label="Ground Motion" value="Ground_Motion" disabled />
+          <Tab label="Analysis Parameters" value="Analysis_Parameters" />
+          <Tab label="Results" value="Results" disabled />
+        </Tabs>
+      </Box>
 
-        <Tab eventKey="Analysis_Parameters" title="Analysis parameters">
-          <p></p>
-          <Form validated onSubmit={this.saveAndContinue}>
-            <Row>
-              <Col xs={8}>
-                <Form.Group
-                  as={Row}
-                  controlId="Date"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Col sm={{ span: 4, offset: 0 }}>
-                    <CustomTooltip
-                      title="Set Site Reponse Analysis Calculation Method"
-                      placement="right"
-                    >
-                      <Form.Label>
-                        {" "}
-                        <h6>1) Analysis type: </h6>
-                      </Form.Label>
-                    </CustomTooltip>
-                  </Col>
-                  <Col sm={{ span: 4, offset: 0 }}>
-                    <Form.Control
-                      as="select"
+      {activeTab === "Analysis_Parameters" && (
+        <Box component="form" onSubmit={saveAndContinue} sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} lg={8}>
+              <Card elevation={2} sx={{ width: "100%", p: 1 }}>
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontWeight: "bold", mb: 2 }}
+                  >
+                    1) Analysis type:
+                  </Typography>
+                  <Tooltip
+                    title="Set Site Response Analysis Calculation Method"
+                    placement="right"
+                  >
+                    <TextField
+                      fullWidth
+                      select
+                      label="Analysis Type"
                       name="Analysis_Type"
-                      defaultValue={this.props.inputValues.Analysis_Type}
+                      defaultValue={inputValues.Analysis_Type}
                       required
-                      onChange={this.props.handleChange}
+                      onChange={handleChange}
                     >
                       <option value="EQL">Equivalent linear</option>
-                      {/*<option value="LE">Linear elastic</option>*/}
-                    </Form.Control>
-                  </Col>
-                </Form.Group>
+                      {/* <option value="LE">Linear elastic</option> */}
+                    </TextField>
+                  </Tooltip>
+                </CardContent>
 
-                {Analysis_Parameters}
-              </Col>
+                {renderAnalysisParameters()}
+              </Card>
+            </Grid>
 
-              <Col xs={4}>
-                <Tabs
-                  id="Profiles"
-                  defaultActiveKey="Vs_Profile"
-                  transition={false}
-                >
-                  <Tab eventKey="Vs_Profile" title="Vs">
-                    <div style={{ height: 550 }}>
+            <Grid item xs={12} lg={4}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Tabs
+                    value={nestedTab}
+                    onChange={(e, newValue) => setNestedTab(newValue)}
+                  >
+                    <Tab label="Vs" value="Vs_Profile" />
+                    <Tab label="Damping" value="Damping_Profile" />
+                  </Tabs>
+                  {nestedTab === "Vs_Profile" && (
+                    <Box sx={{ height: "424px" }}>
                       <ResponsiveLine
-                        data={this.props.inputValues.Site_Vs_Profile}
+                        data={inputValues.Site_Vs_Profile}
                         margin={{ top: 50, right: 0, bottom: 10, left: 70 }}
                         xScale={{ type: "linear", min: "auto", max: "auto" }}
                         yScale={{
@@ -232,40 +210,13 @@ class Analysis_Settings extends Component {
                         colors={{ datum: "color" }}
                         enablePoints={false}
                         useMesh={true}
-                        legends={[
-                          {
-                            anchor: "bottom-left",
-                            direction: "column",
-                            justify: false,
-                            translateX: 10,
-                            translateY: -10,
-                            itemsSpacing: 0,
-                            itemDirection: "left-to-right",
-                            itemWidth: 80,
-                            itemHeight: 20,
-                            itemOpacity: 0.75,
-                            symbolSize: 12,
-                            symbolShape: "circle",
-                            symbolBorderColor: "rgba(0, 0, 0, .5)",
-                            effects: [
-                              {
-                                on: "hover",
-                                style: {
-                                  itemBackground: "rgba(0, 0, 0, .03)",
-                                  itemOpacity: 1,
-                                },
-                              },
-                            ],
-                          },
-                        ]}
                       />
-                    </div>
-                  </Tab>
-
-                  <Tab eventKey="Damping_Profile" title="Damping">
-                    <div style={{ height: 550 }}>
+                    </Box>
+                  )}
+                  {nestedTab === "Damping_Profile" && (
+                    <Box sx={{ height: "550px" }}>
                       <ResponsiveLine
-                        data={this.props.inputValues.Site_Damping_Profile}
+                        data={inputValues.Site_Damping_Profile}
                         margin={{ top: 50, right: 0, bottom: 10, left: 70 }}
                         xScale={{ type: "linear", min: "auto", max: "auto" }}
                         yScale={{
@@ -293,57 +244,40 @@ class Analysis_Settings extends Component {
                         colors={{ datum: "color" }}
                         enablePoints={false}
                         useMesh={true}
-                        legends={[
-                          {
-                            anchor: "bottom-left",
-                            direction: "column",
-                            justify: false,
-                            translateX: 10,
-                            translateY: -10,
-                            itemsSpacing: 0,
-                            itemDirection: "left-to-right",
-                            itemWidth: 80,
-                            itemHeight: 20,
-                            itemOpacity: 0.75,
-                            symbolSize: 12,
-                            symbolShape: "circle",
-                            symbolBorderColor: "rgba(0, 0, 0, .5)",
-                            effects: [
-                              {
-                                on: "hover",
-                                style: {
-                                  itemBackground: "rgba(0, 0, 0, .03)",
-                                  itemOpacity: 1,
-                                },
-                              },
-                            ],
-                          },
-                        ]}
                       />
-                    </div>
-                  </Tab>
-                </Tabs>
-              </Col>
-            </Row>
-            <p></p>
-            <Button variant="secondary" onClick={this.back}>
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", mt: 2, gap: 1 }}
+          >
+            <Button variant="contained" onClick={back} sx={{ mr: 2 }}>
               Back
-            </Button>{" "}
-            {whether_analyzed ? (
-              <Button variant="primary" type="Submit">
-                Analyze
-              </Button>
-            ) : (
-              <Button variant="primary" type="Submit">
-                Analyze
-              </Button>
-            )}
-          </Form>
-        </Tab>
-        <Tab eventKey="Results" title="Results" disabled />
-      </Tabs>
-    );
-  }
-}
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={whether_analyzed === 2}
+            >
+              Analyze
+              {/* {whether_analyzed === 2 ? (
+                "Analyze"
+              ) : (
+                <>
+                  <CircularProgress size={20} sx={{ mr: 1 }} />
+                  Analyze
+                </>
+              )} */}
+            </Button>
+          </Box>
+        </Box>
+      )}
+    </>
+  );
+};
 
 export default Analysis_Settings;

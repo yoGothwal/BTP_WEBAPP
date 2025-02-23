@@ -112,6 +112,7 @@ def Generate_FAS():
 ###########################################################
 @app.route('/Analyze', methods=['POST'])
 def Analyze():
+    print("hellooo")
 
     Target_Depth                = request.json["Target_Depth"];
     Reference_Site_Soil_Profile = request.json["Reference_Site_Soil_Profile"];
@@ -377,9 +378,7 @@ def Analyze():
 
     Max_Strain_Profile[1]["data"] = Target_Site_Max_Shear_Strain_Data_Array;
 
-    return jsonify({'whether_analyzed': 2, 'Transfer_Functions': Transfer_Functions, 'Max_Strain_Profile': Max_Strain_Profile}), 200
-
-###########################################################
+    return jsonify({'whether_analyzed': 2, 'Transfer_Functions': Transfer_Functions, 'Max_Strain_Profile': Max_Strain_Profile}), 200###########################################################
 # Analyze the problem
 ###########################################################
 @app.route('/Generate_Motion', methods=['POST'])

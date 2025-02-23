@@ -17,10 +17,10 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-
-const ReferenceSite = ({
+const TargetSite = ({
   inputValues,
   nextStep,
+  prevStep,
   updateSoilLayers,
   readSoilProfileData,
   downloadSoilProfileData,
@@ -32,7 +32,7 @@ const ReferenceSite = ({
   useEffect(() => {
     if (!inputValues || !inputValues.Site_Vs_Profile) return;
     const newData = [
-      ["Depth (m)", "Reference Soil"],
+      ["Depth (m)", "Target Soil"],
       ...inputValues.Site_Vs_Profile[0].data.flatMap((d, i, arr) => {
         if (i === arr.length - 1) return [[parseFloat(d.x), parseFloat(d.y)]];
         return [
@@ -42,11 +42,11 @@ const ReferenceSite = ({
       }),
     ];
     setGraphData(newData);
-  }, [inputValues.Reference_Site_Soil_Profile]);
+  }, [inputValues.Target_Site_Soil_Profile]);
 
   useEffect(() => {
-    setSoilProfile(inputValues.Reference_Site_Soil_Profile || []);
-  }, [inputValues.Reference_Site_Soil_Profile]);
+    setSoilProfile(inputValues.Target_Site_Soil_Profile || []);
+  }, [inputValues.Target_Site_Soil_Profile]);
 
   const handleRowUpdate = (newRow) => {
     const updatedData = soilProfile.map((row) =>
@@ -88,9 +88,14 @@ const ReferenceSite = ({
       field: "Name",
       headerName: (
         <Tooltip title="Layer Name">
-          <Box component="span" sx={{ fontSize: "1rem", fontWeight: "normal" }}>
-            Layer
-          </Box>
+          <Typography component="span">
+            <Box
+              component="span"
+              sx={{ fontSize: "1rem", fontWeight: "normal" }}
+            >
+              Layer
+            </Box>
+          </Typography>
         </Tooltip>
       ),
       minWidth: 80,
@@ -320,12 +325,15 @@ const ReferenceSite = ({
     },
   ];
 
-  const [activeTab, setActiveTab] = useState("Reference_Site");
+  const [activeTab, setActiveTab] = useState("Target_Site");
   const [nestedTab, setNestedTab] = useState("Vs_Profile");
 
   const saveAndContinue = (e) => {
     e.preventDefault();
     nextStep();
+  };
+  const back = (e) => {
+    prevStep();
   };
 
   return (
@@ -344,8 +352,8 @@ const ReferenceSite = ({
             "& .MuiTabs-indicator": { backgroundColor: "primary.main" },
           }}
         >
-          <Tab label="Reference Site" value="Reference_Site" />
-          <Tab label="Target Site" value="Target_Site" disabled />
+          <Tab label="Reference Site" value="Reference_Site" disabled />
+          <Tab label="Target Site" value="Target_Site" />
           <Tab label="Ground Motion" value="Ground_Motion" disabled />
           <Tab
             label="Analysis Parameters"
@@ -355,11 +363,11 @@ const ReferenceSite = ({
           <Tab label="Results" value="Results" disabled />
         </Tabs>
       </Box>
-      {activeTab === "Reference_Site" && (
+      {activeTab === "Target_Site" && (
         <Box
           component="form"
           onSubmit={saveAndContinue}
-          sx={{ mt: 2, height: "900px", display: "block" }}
+          sx={{ mt: 1, height: "900px" }}
         >
           <Box
             sx={{
@@ -368,7 +376,7 @@ const ReferenceSite = ({
               backgroundColor: "white",
             }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={2} direction="row">
               <Grid item xs={12} lg={8}>
                 <Card elevation={2} sx={{ width: "100%" }}>
                   <CardContent>
@@ -381,7 +389,7 @@ const ReferenceSite = ({
                           justifyContent: "space-between",
                         }}
                       >
-                        <Typography variant="h6" gutterBottom>
+                        <Typography component="span" variant="h6">
                           <b>1) Soil Profile</b> (m)
                         </Typography>
                         <Box sx={{ display: "flex", gap: 0 }}>
@@ -397,7 +405,7 @@ const ReferenceSite = ({
                             <IconButton component="label" color="primary">
                               <CloudUpload />
                               <input
-                                name="ReferenceDataFile"
+                                name="TargetDataFile"
                                 type="file"
                                 hidden
                                 accept=".xlsx"
@@ -424,8 +432,8 @@ const ReferenceSite = ({
                         processRowUpdate={handleRowUpdate}
                         disableSelectionOnClick
                         sx={{
-                          mt: 2,
-                          height: "510px",
+                          mt: 1,
+                          height: "377px",
                           width: "100%",
                           "& .MuiDataGrid-cell": { textAlign: "center" },
                         }}
@@ -434,18 +442,33 @@ const ReferenceSite = ({
                   </CardContent>
                   <Grid container spacing={2} padding={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Stack>
+                      <Stack spacing={2}>
                         <Typography
                           variant="h6"
-                          gutterBottom
-                          sx={{ fontWeight: "bold" }}
+                          component="span"
+                          sx={{ mb: 1 }}
                         >
                           <b>2) Water table depth</b> (m)
                         </Typography>
                         <TextField
                           type="text"
-                          name="Ref_Water_Table_Depth"
-                          defaultValue={inputValues.Ref_Water_Table_Depth}
+                          name="Tar_Water_Table_Depth"
+                          defaultValue={inputValues.Tar_Water_Table_Depth}
+                          required
+                          onChange={handleChange}
+                          fullWidth
+                        />
+                        <Typography
+                          component="span"
+                          variant="h6"
+                          sx={{ mb: 1, mt: 2 }}
+                        >
+                          <b>3) Target depth*</b> (m)
+                        </Typography>
+                        <TextField
+                          type="text"
+                          name="Target_Depth"
+                          defaultValue={inputValues.Target_Depth}
                           required
                           onChange={handleChange}
                           fullWidth
@@ -453,42 +476,43 @@ const ReferenceSite = ({
                       </Stack>
                     </Grid>
                     <Grid item xs={12} sm={6} md={8}>
-                      <Stack>
-                        {" "}
+                      <Stack spacing={2}>
                         <Typography
                           variant="h6"
-                          gutterBottom
-                          sx={{ fontWeight: "bold" }}
+                          component="span"
+                          sx={{ mb: 1 }}
                         >
-                          <b>3) Halfspace</b>
+                          <b>4) Halfspace</b>&nbsp;(V<sub>S</sub>(m/s)):
                         </Typography>
                         <Stack direction="row" spacing={2}>
-                          <Typography
-                            component="span"
-                            sx={{ mb: 2, alignContent: "center" }}
-                          >
-                            V<sub>S</sub>(m/s):
-                          </Typography>
-                          <TextField
-                            fullWidth
-                            name="Ref_Halfspace_Vs"
-                            defaultValue={inputValues.Ref_Halfspace_Vs}
-                            required
-                            onChange={handleChange}
-                          />
-                          <Typography
-                            component="span"
-                            sx={{ mb: 2, alignContent: "center" }}
-                          >
-                            Damping (%)
-                          </Typography>
-                          <TextField
-                            fullWidth
-                            name="Ref_Halfspace_Damping"
-                            defaultValue={inputValues.Ref_Halfspace_Damping}
-                            required
-                            onChange={handleChange}
-                          />
+                          <Stack direction="row" spacing={4}>
+                            <Typography
+                              component="span"
+                              sx={{ mb: 2, alignContent: "center" }}
+                            >
+                              V<sub>S</sub>(m/s):
+                            </Typography>
+                            <TextField
+                              fullWidth
+                              name="Tar_Halfspace_Vs"
+                              defaultValue={inputValues.Tar_Halfspace_Vs}
+                              required
+                              onChange={handleChange}
+                            />
+                            <Typography
+                              component="span"
+                              sx={{ mb: 2, alignContent: "center" }}
+                            >
+                              Damping (%):
+                            </Typography>
+                            <TextField
+                              fullWidth
+                              name="Tar_Halfspace_Damping"
+                              defaultValue={inputValues.Tar_Halfspace_Damping}
+                              required
+                              onChange={handleChange}
+                            />
+                          </Stack>
                         </Stack>
                       </Stack>
                     </Grid>
@@ -496,7 +520,7 @@ const ReferenceSite = ({
                 </Card>
               </Grid>
               <Grid item xs={12} lg={4}>
-                <Card elevation={2} sx={{ width: "100%" }}>
+                <Card elevation={2} sx={{ width: "100%", p: 1 }}>
                   <CardContent>
                     <Tabs
                       value={nestedTab}
@@ -506,10 +530,10 @@ const ReferenceSite = ({
                       <Tab value="Damping_Profile" label="Damping" />
                     </Tabs>
                     {nestedTab === "Vs_Profile" && (
-                      <Box sx={{ height: "637px", width: "100%" }}>
+                      <Box sx={{ height: "610px", width: "100%" }}>
                         <ResponsiveLine
                           data={inputValues.Site_Vs_Profile}
-                          margin={{ top: 50, right: 30, bottom: 10, left: 45 }}
+                          margin={{ top: 50, right: 0, bottom: 10, left: 50 }}
                           xScale={{ type: "linear", min: "auto", max: "auto" }}
                           yScale={{
                             type: "linear",
@@ -566,10 +590,10 @@ const ReferenceSite = ({
                       </Box>
                     )}
                     {nestedTab === "Damping_Profile" && (
-                      <Box sx={{ height: "637px", width: "100%" }}>
+                      <Box sx={{ height: "610px", width: "100%" }}>
                         <ResponsiveLine
                           data={inputValues.Site_Damping_Profile}
-                          margin={{ top: 50, right: 30, bottom: 10, left: 45 }}
+                          margin={{ top: 50, right: 0, bottom: 10, left: 50 }}
                           xScale={{ type: "linear", min: "auto", max: "auto" }}
                           yScale={{
                             type: "linear",
@@ -631,16 +655,11 @@ const ReferenceSite = ({
             </Grid>
           </Box>
           <Box
-            sx={{
-              height: "40px",
-              display: "flex",
-              backgroundColor: "white",
-              justifyContent: "flex-end",
-              mt: 2,
-              mb: 2,
-              gap: 1,
-            }}
+            sx={{ display: "flex", justifyContent: "flex-end", mt: 2, gap: 1 }}
           >
+            <Button variant="contained" onClick={back} sx={{ mr: 2 }}>
+              Back
+            </Button>{" "}
             <Button variant="contained" type="submit">
               Next
             </Button>
@@ -651,4 +670,4 @@ const ReferenceSite = ({
   );
 };
 
-export default ReferenceSite;
+export default TargetSite;

@@ -1,26 +1,20 @@
 import React, { Component, useState } from "react";
 import Tab_1 from "./ReferenceSite";
-import Tab_2 from "./2_Target_Site_Profile";
-import Tab_3 from "./3_Ground_Motion";
-import Tab_4 from "./4_Analysis_Parameters";
-import Tab_5 from "./5_Results";
+import Tab_2 from "./TargetSite";
+import Tab_3 from "./Ground_Motion";
+import Tab_4 from "./AnalysisParameters";
+import Tab_5 from "./Results";
 import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 
 import Sample_Motion from "./motions/Sample_Motion.json";
 import Kobe from "./motions/Kobe.json";
 import Northridge from "./motions/Northridge.json";
 import LomaGilroy from "./motions/LomaGilroy.json";
 import Parkfield from "./motions/Parkfield.json";
-import SideNav from "./SideNav";
-
-import NavBar from "./NavBar";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+
 import AppTemplate from "./AppTemplate";
 
 class Application extends Component {
@@ -333,10 +327,12 @@ class Application extends Component {
     // Bind the submission to handleChange()
     this.handleChange = this.handleChange.bind(this);
   }
+
   componentDidMount() {
     const Motion_Data = [...this.state.Motion];
     Motion_Data[1].data = Sample_Motion.data;
-
+    console.log("Step:", this.state.step);
+    console.log("Current State", this.state);
     this.setState({
       Motion: Motion_Data,
     });
@@ -347,21 +343,24 @@ class Application extends Component {
   }
 
   // function to update the step by 1
+
   nextStep = () => {
     const { step } = this.state;
+    console.log("Step:", this.state.step + 1);
+    console.log("Previous State", this.state);
 
-    if (step === 2) {
+    if (step === 1) {
       this.Generate_FAS();
     }
 
     this.setState({
       step: step + 1,
     });
-    console.log(this.state);
   };
 
   // function to decrement the step by 1
   prevStep = () => {
+    console.log("clicked");
     const { step } = this.state;
     this.setState({
       step: step - 1,
@@ -377,7 +376,8 @@ class Application extends Component {
     this.setState({
       whether_analyzed: 1,
     });
-    fetch("/Analyze", {
+    console.log("/analyze called");
+    fetch("http://localhost:5000/Analyze", {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -388,20 +388,26 @@ class Application extends Component {
     })
       .then((response) => response.json())
       .then((json) => {
-        this.setState({
-          whether_analyzed: json.whether_analyzed,
-          Transfer_Functions: json.Transfer_Functions,
-          Max_Strain_Profile: json.Max_Strain_Profile,
-        });
+        console.log("/analyze result", json);
+        console.log(this.state.whether_analyzed);
+        this.setState(
+          {
+            whether_analyzed: json.whether_analyzed,
+            Transfer_Functions: json.Transfer_Functions,
+            Max_Strain_Profile: json.Max_Strain_Profile,
+          },
+          () => {
+            console.log("Updated state:", this.state.whether_analyzed);
+            if (this.state.whether_analyzed === 2) {
+              this.Generate_Motion();
 
-        if (this.state.whether_analyzed === 2) {
-          this.Generate_Motion();
-          this.setState({
-            step: step + 1,
-            whether_analyzed: 0,
-          });
-        }
-        console.log("state after analyzing : ", this.state);
+              this.setState({
+                step: step + 1,
+                whether_analyzed: 0,
+              });
+            }
+          }
+        );
       })
       .catch((error) => console.log(error));
   };
@@ -415,8 +421,7 @@ class Application extends Component {
 
     this.setState({ whether_analyzed: 1 });
     console.log("generate fas called");
-    console.log("state after generating feas: ", this.state);
-    fetch("/Generate_FAS", {
+    fetch("http://localhost:5000/Generate_FAS", {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -428,12 +433,12 @@ class Application extends Component {
       .then((response) => response.json())
       .then((json) => {
         this.setState({
-          whether_analyzed: json.whether_analyzed,
+          whether_analyzed: json.whether_analyzed, //2
           FAS: json.FAS,
         });
-
         if (this.state.whether_analyzed === 2) {
           this.setState({
+            step: step + 1,
             whether_analyzed: 0,
           });
         }
@@ -446,11 +451,12 @@ class Application extends Component {
   // the given ground motion
   /////////////////////////////////////////////
   Generate_Motion = () => {
+    console.log("generate motion called");
     const { step } = this.state;
     this.setState({
       whether_processed: 1,
     });
-    fetch("/Generate_Motion", {
+    fetch("http://localhost:5000/Generate_Motion", {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -462,19 +468,22 @@ class Application extends Component {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        this.setState({
-          whether_processed: json.whether_processed,
-          Motion: json.Motion,
-          FA_Spectrum: json.FA_Spectrum,
-          Response_Spectrum: json.Response_Spectrum,
-        });
-        console.log(this.state);
-
-        if (this.state.whether_processed === 2) {
-          this.setState({
-            whether_processed: 0,
-          });
-        }
+        this.setState(
+          {
+            whether_processed: json.whether_processed,
+            Motion: json.Motion,
+            FA_Spectrum: json.FA_Spectrum,
+            Response_Spectrum: json.Response_Spectrum,
+          },
+          () => {
+            console.log(this.state);
+            if (this.state.whether_processed === 2) {
+              this.setState({
+                whether_processed: 0,
+              });
+            }
+          }
+        );
       })
       .catch((error) => console.log(error));
   };
@@ -483,6 +492,7 @@ class Application extends Component {
   handleChange = (event) => {
     const inputName = event.target.name;
     const inputValue = event.target.value;
+    console.log("modifying", inputName);
 
     this.setState({ [inputName]: inputValue });
 
@@ -1237,43 +1247,26 @@ class Application extends Component {
       case 2:
         return (
           <>
-            <NavBar></NavBar>
-            <br></br>
-            <br></br>
-            <Box sx={{ display: "flex" }}>
-              <SideNav></SideNav>
-              <div>
-                <Box sx={{ flexGrow: 1, p: 3 }}>
-                  <h2>
-                    {" "}
-                    GENERATE INPUT GROUND MOTIONS FOR NUMERICAL ANALYSES{" "}
-                  </h2>
-                  A web application for the development of input ground motions
-                  for the numerical evaluation of structures in engineering
-                  practice <hr />
-                </Box>
-                <Box sx={{ flexGrow: 1, p: 3 }}>
-                  <Tab_2
-                    nextStep={this.nextStep}
-                    prevStep={this.prevStep}
-                    updateSoilLayers={this.update_Target_Site_Soil_Profile}
-                    readSoilProfileData={this.readExcelProfileData}
-                    downloadSoilProfileData={this.writeExcelProfileData}
-                    handleChange={this.handleChange}
-                    inputValues={inputValues}
-                  />
-                </Box>
-              </div>
-            </Box>
+            <AppTemplate
+              content={
+                <Tab_2
+                  nextStep={this.nextStep}
+                  prevStep={this.prevStep}
+                  updateSoilLayers={this.update_Target_Site_Soil_Profile}
+                  readSoilProfileData={this.readExcelProfileData}
+                  downloadSoilProfileData={this.writeExcelProfileData}
+                  handleChange={this.handleChange}
+                  inputValues={inputValues}
+                />
+              }
+            ></AppTemplate>
           </>
         );
       case 3:
         return (
           <>
-            <Box sx={{ display: "flex" }}>
-              <SideNav></SideNav>
-              {/* <h1>Reports</h1> */}
-              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <AppTemplate
+              content={
                 <Tab_3
                   nextStep={this.nextStep}
                   prevStep={this.prevStep}
@@ -1282,42 +1275,39 @@ class Application extends Component {
                   inputValues={inputValues}
                   Generate_FAS={this.Generate_FAS}
                 />
-              </Box>
-            </Box>
+              }
+            ></AppTemplate>
           </>
         );
       case 4:
         return (
           <>
-            <Box sx={{ display: "flex" }}>
-              <SideNav></SideNav>
-              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <AppTemplate
+              content={
                 <Tab_4
                   nextStep={this.Analyze}
                   prevStep={this.prevStep}
                   inputValues={inputValues}
                   handleChange={this.handleChange}
                 />
-              </Box>
-            </Box>
+              }
+            ></AppTemplate>
           </>
         );
       case 5:
         return (
           <>
-            <Box sx={{ display: "flex" }}>
-              <SideNav></SideNav>
-              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <AppTemplate
+              content={
                 <Tab_5
-                  // nextStep={this.Analyze}
                   prevStep={this.prevStep}
                   inputValues={inputValues}
                   handleChange={this.handleChange}
                   handleFile={this.readMotionFile}
                   downloadFile={this.downloadInputMotionFile}
                 />
-              </Box>
-            </Box>
+              }
+            ></AppTemplate>
           </>
         );
     }

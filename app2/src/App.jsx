@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Application from "./components/0_Application.jsx";
 import "./App.css";
-import Illustration from "./App.png";
 import Reports from "./components/Reports.jsx";
-import SideNav from "./components/SideNav";
+
 import About from "./components/About";
 import Home from "./components/Home";
 

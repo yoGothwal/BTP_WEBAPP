@@ -46,6 +46,7 @@ const ReferenceSite = ({
 
   useEffect(() => {
     setSoilProfile(inputValues.Reference_Site_Soil_Profile || []);
+    console.log(inputValues.Reference_Site_Soil_Profile);
   }, [inputValues.Reference_Site_Soil_Profile]);
 
   const handleRowUpdate = (newRow) => {
@@ -86,7 +87,9 @@ const ReferenceSite = ({
   const columns = [
     {
       field: "Name",
-      headerName: (
+      headerName: "Layer", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Layer Name">
           <Box component="span" sx={{ fontSize: "1rem", fontWeight: "normal" }}>
             Layer
@@ -104,7 +107,9 @@ const ReferenceSite = ({
     },
     {
       field: "Thickness",
-      headerName: (
+      headerName: "Thickness", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Thickness (m)">
           <Typography component="span">
             <Box
@@ -134,7 +139,9 @@ const ReferenceSite = ({
     },
     {
       field: "Vs",
-      headerName: (
+      headerName: "Vs", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Shear Wave Velocity (m/s)">
           <Typography component="span">
             <Box
@@ -164,7 +171,9 @@ const ReferenceSite = ({
     },
     {
       field: "Gamma",
-      headerName: (
+      headerName: "Gamma", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Saturated Unit Weight (kN/m³)">
           <Typography component="span">
             <Box
@@ -194,7 +203,9 @@ const ReferenceSite = ({
     },
     {
       field: "PI",
-      headerName: (
+      headerName: "PI", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Plasticity Index">
           <Typography component="span">
             <Box
@@ -218,7 +229,9 @@ const ReferenceSite = ({
     },
     {
       field: "OCR",
-      headerName: (
+      headerName: "OCR", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Overconsolidation Ratio">
           <Typography component="span">
             <Box
@@ -242,7 +255,9 @@ const ReferenceSite = ({
     },
     {
       field: "Damping",
-      headerName: (
+      headerName: "Damping", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Damping (%)">
           <Typography component="span">
             <Box
@@ -266,7 +281,9 @@ const ReferenceSite = ({
     },
     {
       field: "SoilModel",
-      headerName: (
+      headerName: "SoilModel", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Soil Model">
           <Typography component="span">
             <Box
@@ -290,7 +307,9 @@ const ReferenceSite = ({
     },
     {
       field: "actions",
-      headerName: (
+      headerName: "Actions", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Actions">
           <Typography component="span">
             <Box

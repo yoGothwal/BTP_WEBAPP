@@ -86,7 +86,9 @@ const TargetSite = ({
   const columns = [
     {
       field: "Name",
-      headerName: (
+      headerName: "Layer", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Layer Name">
           <Typography component="span">
             <Box
@@ -109,7 +111,9 @@ const TargetSite = ({
     },
     {
       field: "Thickness",
-      headerName: (
+      headerName: "Thickness", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Thickness (m)">
           <Typography component="span">
             <Box
@@ -139,7 +143,9 @@ const TargetSite = ({
     },
     {
       field: "Vs",
-      headerName: (
+      headerName: "Vs", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Shear Wave Velocity (m/s)">
           <Typography component="span">
             <Box
@@ -169,7 +175,9 @@ const TargetSite = ({
     },
     {
       field: "Gamma",
-      headerName: (
+      headerName: "Gamma", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Saturated Unit Weight (kN/m³)">
           <Typography component="span">
             <Box
@@ -199,7 +207,9 @@ const TargetSite = ({
     },
     {
       field: "PI",
-      headerName: (
+      headerName: "PI", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Plasticity Index">
           <Typography component="span">
             <Box
@@ -223,7 +233,9 @@ const TargetSite = ({
     },
     {
       field: "OCR",
-      headerName: (
+      headerName: "OCR", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Overconsolidation Ratio">
           <Typography component="span">
             <Box
@@ -247,7 +259,9 @@ const TargetSite = ({
     },
     {
       field: "Damping",
-      headerName: (
+      headerName: "Damping", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Damping (%)">
           <Typography component="span">
             <Box
@@ -271,7 +285,9 @@ const TargetSite = ({
     },
     {
       field: "SoilModel",
-      headerName: (
+      headerName: "SoilModel", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Soil Model">
           <Typography component="span">
             <Box
@@ -295,7 +311,9 @@ const TargetSite = ({
     },
     {
       field: "actions",
-      headerName: (
+      headerName: "Actions", // ✅ headerName must be a string
+      renderHeader: () => (
+        // ✅ Use renderHeader for JSX
         <Tooltip title="Actions">
           <Typography component="span">
             <Box
@@ -324,11 +342,11 @@ const TargetSite = ({
       ),
     },
   ];
-
   const [activeTab, setActiveTab] = useState("Target_Site");
   const [nestedTab, setNestedTab] = useState("Vs_Profile");
-
+  console.log(soilProfile);
   const saveAndContinue = (e) => {
+    if (!inputValues.FAS) return;
     e.preventDefault();
     nextStep();
   };

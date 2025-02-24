@@ -21,7 +21,7 @@ from functools import wraps
 
 app = Flask(__name__, static_folder='app/build', static_url_path="")
 # app = Flask(__name__)
-CORS(app)
+CORS(app,supports_credentials=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = 'your_secret_key'  # Required for session management
 

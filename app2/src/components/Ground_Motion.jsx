@@ -29,6 +29,7 @@ const Ground_Motion = ({
   const [nestedTab, setNestedTab] = useState("Vs_Profile");
 
   const whether_analyzed = inputValues.whether_analyzed;
+
   const data = inputValues.FAS;
   const FAS_Data = data[0].data;
   const FAS_MaxValue =

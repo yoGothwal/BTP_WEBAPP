@@ -45,7 +45,8 @@ const TargetSite = ({
   }, [inputValues.Target_Site_Soil_Profile]);
 
   useEffect(() => {
-    setSoilProfile(inputValues.Target_Site_Soil_Profile || []);
+    setSoilProfile(inputValues.Target_Site_Soil_Profile);
+    console.log(inputValues.Target_Site_Soil_Profile);
   }, [inputValues.Target_Site_Soil_Profile]);
 
   const handleRowUpdate = (newRow) => {
@@ -344,7 +345,6 @@ const TargetSite = ({
   ];
   const [activeTab, setActiveTab] = useState("Target_Site");
   const [nestedTab, setNestedTab] = useState("Vs_Profile");
-  console.log(soilProfile);
   const saveAndContinue = (e) => {
     // if (!inputValues.FAS) return;
     e.preventDefault();

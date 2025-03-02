@@ -432,16 +432,21 @@ class Application extends Component {
     })
       .then((response) => response.json())
       .then((json) => {
-        this.setState({
-          whether_analyzed: json.whether_analyzed, //2
-          FAS: json.FAS,
-        });
-        if (this.state.whether_analyzed === 2) {
-          this.setState({
-            step: step + 1,
-            whether_analyzed: 0,
-          });
-        }
+        console.log("generate feas response", json);
+        this.setState(
+          {
+            whether_analyzed: json.whether_analyzed, //2
+            FAS: json.FAS,
+          },
+          () => {
+            if (this.state.whether_analyzed === 2) {
+              this.setState({
+                step: step + 1,
+                whether_analyzed: 0,
+              });
+            }
+          }
+        );
       })
       .catch((error) => console.log(error));
   };

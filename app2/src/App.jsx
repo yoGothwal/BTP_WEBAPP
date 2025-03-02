@@ -33,7 +33,6 @@ const App = () => {
   }, []);
 
   const handleLogin = () => {
-    console.log(isLoggedIn);
     setIsLoggedIn(true);
   };
 

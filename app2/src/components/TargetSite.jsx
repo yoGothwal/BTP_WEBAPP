@@ -346,7 +346,7 @@ const TargetSite = ({
   const [nestedTab, setNestedTab] = useState("Vs_Profile");
   console.log(soilProfile);
   const saveAndContinue = (e) => {
-    if (!inputValues.FAS) return;
+    // if (!inputValues.FAS) return;
     e.preventDefault();
     nextStep();
   };
